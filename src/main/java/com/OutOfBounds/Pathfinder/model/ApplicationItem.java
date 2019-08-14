@@ -1,8 +1,12 @@
 package com.OutOfBounds.Pathfinder.model;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 public class ApplicationItem {
 private String name;
+
+//@DBRef
+//private String pointOfInterestId;
 private int value;
 
 public ApplicationItem(String name, int value) {
