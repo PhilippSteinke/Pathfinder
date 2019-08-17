@@ -37,6 +37,11 @@ public class PointOfInterestService {
 	private void addTestingPointOfInterests() {
 		if (getAll().size() == 0) {
 			addAll(Arrays.asList(new PointOfInterest(1.2f, 2.4f), new PointOfInterest(4.5f, 3.1f)));
+		} else {
+			getAll().forEach(p -> {
+				p.setActive(true);
+				repo.save(p);
+			});
 		}
 	}
 }
