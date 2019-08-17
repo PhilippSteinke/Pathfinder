@@ -37,16 +37,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	// provides /login endpoint
 	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException {
+	public Authentication attemptAuthentication(HttpServletRequest request,
+			HttpServletResponse response) throws AuthenticationException {
 		Logger log = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
-		log.error("login attempt");
+		log.info("login attempt");
 		try {
-			ApplicationUser creds = new ObjectMapper().readValue(request.getInputStream(), ApplicationUser.class);
+			ApplicationUser creds = new ObjectMapper().readValue(request.getInputStream(),
+					ApplicationUser.class);
 
-			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(creds.getUsername(),
-					creds.getPassword(),
-					new ArrayList<>())); // authorities
+			return authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(creds.getUsername(),
+							creds.getPassword(),
+							new ArrayList<>())); // authorities
 
 		} catch (Exception e) {
 			log.error("catching them all {}", e.getCause());
@@ -60,7 +62,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			FilterChain chain,
 			Authentication auth) throws IOException {
 		String token = JWT.create().withSubject(((User) auth.getPrincipal()).getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).sign(HMAC512(SECRET.getBytes()));
+				.withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+				.sign(HMAC512(SECRET.getBytes()));
 
 		res.addHeader("access-control-expose-headers", HEADER_STRING);
 		res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);

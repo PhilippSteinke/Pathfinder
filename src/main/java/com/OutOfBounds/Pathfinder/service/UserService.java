@@ -1,7 +1,8 @@
 package com.OutOfBounds.Pathfinder.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +11,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.OutOfBounds.Pathfinder.exception.EntityNotFoundException;
 import com.OutOfBounds.Pathfinder.exception.UsernameNotUniqueException;
-import com.OutOfBounds.Pathfinder.model.ApplicationItem;
+import com.OutOfBounds.Pathfinder.model.Achievement;
 import com.OutOfBounds.Pathfinder.model.ApplicationUser;
+import com.OutOfBounds.Pathfinder.model.Highscore;
+import com.OutOfBounds.Pathfinder.model.PointOfInterest;
 import com.OutOfBounds.Pathfinder.repository.UserRepostirory;
 
 @Service
@@ -23,37 +27,64 @@ public class UserService {
 	@Autowired
 	private UserRepostirory userRepo;
 
+	@Autowired
+	private HighscoreService highscoreService;
+
+	@Autowired
+	private PointOfInterestService pointOfInterestService;
+
+	@PostConstruct
+	public void init() {
+		updateHighscore();
+		// for testing only
+		testing();
+	}
+
 	public void signUpNewUser(ApplicationUser user) throws UsernameNotUniqueException {
 		Logger log = LoggerFactory.getLogger(UserService.class);
-		log.error("sign-up attempt of: {}", user.getUsername());
-		if (userRepo.findByUsername(user.getUsername()) != null)
-			throw new UsernameNotUniqueException();
+		log.info("sign-up attempt of: {}", user.getUsername());
 
+		if (userRepo.findByUsername(user.getUsername()).isPresent()) {
+			throw new UsernameNotUniqueException(user.getUsername());
+		}
 		user.setPassword(encoder.encode(user.getPassword()));
+		user.setPointOfInterests(pointOfInterestService.getAll());
 		userRepo.save(user);
 	}
 
-	public void addAchievement(String principal, ApplicationItem achievement) {
+	public void addAchievement(String principal, Achievement achievement)
+			throws EntityNotFoundException {
 		ApplicationUser user = getUser(principal);
 		user.addAchievement(achievement);
+		user.setPointOfInterestInactive(achievement.getPointOfInterestId());
 		userRepo.save(user);
+		updateHighscore();
 	}
 
-	public List<ApplicationItem> getAchievements(String principal) {
-		ApplicationUser user = getUser(principal);
-		return user.getAchievements();
+	public List<Achievement> getAchievements(String principal) {
+		return getUser(principal).getAchievements();
 	}
 
-
-	public List<ApplicationUser> getHighscore(int highScoreLength) {
-		return userRepo.findAll().stream().sorted().limit(highScoreLength).collect(Collectors.toList());
+	public Highscore getHighscore(String principal) {
+		return highscoreService.getHighscoreByUsername(getUser(principal).getUsername());
 	}
 
-	
+	public List<PointOfInterest> getPointOfInterests(String principal) {
+		return getUser(principal).getPointOfInterests();
+	}
+
 	private ApplicationUser getUser(String principal) {
-		ApplicationUser user = userRepo.findByUsername(principal);
-		if (user == null)
-			throw new UsernameNotFoundException("user not found");
+		ApplicationUser user = userRepo.findByUsername(principal)
+				.orElseThrow(() -> new UsernameNotFoundException(
+						String.format("User %s couldn't be found!", principal)));
 		return user;
+	}
+
+	private void updateHighscore() {
+		highscoreService.updateBuffer(userRepo.findAll());
+	}
+
+	private void testing() {
+		userRepo.findAll().forEach(u -> u.setPointOfInterests(pointOfInterestService.getAll()));
 	}
 }

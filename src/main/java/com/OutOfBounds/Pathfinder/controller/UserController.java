@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.OutOfBounds.Pathfinder.exception.EntityNotFoundException;
 import com.OutOfBounds.Pathfinder.exception.UsernameNotUniqueException;
-import com.OutOfBounds.Pathfinder.model.ApplicationItem;
+import com.OutOfBounds.Pathfinder.model.Achievement;
 import com.OutOfBounds.Pathfinder.model.ApplicationUser;
+import com.OutOfBounds.Pathfinder.model.Highscore;
+import com.OutOfBounds.Pathfinder.model.PointOfInterest;
 import com.OutOfBounds.Pathfinder.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,18 +33,24 @@ public class UserController {
 		userService.signUpNewUser(user);
 	}
 
-	@PostMapping("/addAchievementItem")
-	public void add(@AuthenticationPrincipal String principal, @RequestBody ApplicationItem achievement) {
+	@PostMapping("/add-achievement")
+	public void add(@AuthenticationPrincipal String principal, @RequestBody Achievement achievement)
+			throws EntityNotFoundException {
 		userService.addAchievement(principal, achievement);
 	}
 
-	@PostMapping("/achievementList")
-	public List<ApplicationItem> getAchievements(@AuthenticationPrincipal String principal) {
+	@GetMapping("/achievements")
+	public List<Achievement> getAchievements(@AuthenticationPrincipal String principal) {
 		return userService.getAchievements(principal);
 	}
 
 	@GetMapping("/highscore")
-	public List<ApplicationUser> getHighscore() {
-		return userService.getHighscore(10);
+	public Highscore getHighscore(@AuthenticationPrincipal String principal) {
+		return userService.getHighscore(principal);
+	}
+
+	@GetMapping("/pointofinterests")
+	public List<PointOfInterest> getPointOfInterests(@AuthenticationPrincipal String principal) {
+		return userService.getPointOfInterests(principal);
 	}
 }

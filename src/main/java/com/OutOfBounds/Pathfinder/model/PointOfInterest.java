@@ -6,12 +6,15 @@ public class PointOfInterest {
 
 	@Id
 	private String id;
-	
+
 	private final float lat, lng;
-	
+
+	private boolean isActive;
+
 	public PointOfInterest(float lat, float lng) {
-		this.lat=lat;
+		this.lat = lat;
 		this.lng = lng;
+		isActive = true;
 	}
 
 	public float getLat() {
@@ -29,11 +32,12 @@ public class PointOfInterest {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-		
-	
-	
-	
-	
-	
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 }

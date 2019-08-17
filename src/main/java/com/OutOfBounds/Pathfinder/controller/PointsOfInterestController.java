@@ -1,5 +1,7 @@
 package com.OutOfBounds.Pathfinder.controller;
 
+import static com.OutOfBounds.Pathfinder.security.SecurityConstants.POINT_OF_INTEREST_PASSWORD;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,32 +9,31 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.OutOfBounds.Pathfinder.model.PointOfInterest;
 import com.OutOfBounds.Pathfinder.service.PointOfInterestService;
 
 @RestController
-@RequestMapping("/PointsOfInterest")
+@RequestMapping("/pointofinterest")
 public class PointsOfInterestController {
-	
+
 	@Autowired
 	private PointOfInterestService service;
-	
-	
-	@GetMapping(value="/all")
-	public List<PointOfInterest> getAll(){
-		return this.service.getAll();
+
+	@GetMapping(value = "/all")
+	public List<PointOfInterest> getAll() {
+		return service.getAll();
 	}
-	
-	//TODO remove those or add more specific authorization requirements - just for testing 
-	@PostMapping(value="/add")
-	public void add(@RequestBody PointOfInterest pointOfInterest) {
-		this.service.add(pointOfInterest);
-	}
-	
-	@PostMapping(value="/addAll")
-	public void addAll(@RequestBody List<PointOfInterest> pointsOfInterest) {
-		this.service.addAll(pointsOfInterest);
+
+	@PostMapping(value = "/add")
+	public void addAll(@RequestParam String password,
+			@RequestBody List<PointOfInterest> pointsOfInterest) throws Exception {
+		if (password.equals(POINT_OF_INTEREST_PASSWORD)) {
+			service.addAll(pointsOfInterest);
+		} else {
+			throw new Exception("YOU SHALL NOT PASS!");
+		}
 	}
 }
