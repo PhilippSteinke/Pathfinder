@@ -1,5 +1,6 @@
 package com.OutOfBounds.Pathfinder.service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,12 +37,11 @@ public class PointOfInterestService {
 
 	private void addTestingPointOfInterests() {
 		if (getAll().size() == 0) {
-			addAll(Arrays.asList(new PointOfInterest(1.2f, 2.4f), new PointOfInterest(4.5f, 3.1f)));
-		} else {
-			getAll().forEach(p -> {
-				p.setActive(true);
-				repo.save(p);
-			});
+			addAll(Arrays.asList(
+					new PointOfInterest(BigDecimal.valueOf(53.566088),
+							BigDecimal.valueOf(10.041571)),
+					new PointOfInterest(BigDecimal.valueOf(53.553648),
+							BigDecimal.valueOf(10.027158))));
 		}
 	}
 }

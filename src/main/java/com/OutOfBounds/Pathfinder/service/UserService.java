@@ -1,5 +1,7 @@
 package com.OutOfBounds.Pathfinder.service;
 
+import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +19,7 @@ import com.OutOfBounds.Pathfinder.model.Achievement;
 import com.OutOfBounds.Pathfinder.model.ApplicationUser;
 import com.OutOfBounds.Pathfinder.model.Highscore;
 import com.OutOfBounds.Pathfinder.model.PointOfInterest;
+import com.OutOfBounds.Pathfinder.model.PointOfInterestDistance;
 import com.OutOfBounds.Pathfinder.repository.UserRepostirory;
 
 @Service
@@ -52,13 +55,14 @@ public class UserService {
 		userRepo.save(user);
 	}
 
-	public void addAchievement(String principal, Achievement achievement)
+	public List<PointOfInterest> completePointOfInterest(String principal, Achievement achievement)
 			throws EntityNotFoundException {
 		ApplicationUser user = getUser(principal);
 		user.addAchievement(achievement);
 		user.setPointOfInterestInactive(achievement.getPointOfInterestId());
 		userRepo.save(user);
 		updateHighscore();
+		return user.getPointOfInterests();
 	}
 
 	public List<Achievement> getAchievements(String principal) {
@@ -69,8 +73,24 @@ public class UserService {
 		return highscoreService.getHighscoreByUsername(getUser(principal).getUsername());
 	}
 
-	public List<PointOfInterest> getPointOfInterests(String principal) {
+	public List<PointOfInterest> getPointsOfInterest(String principal) {
 		return getUser(principal).getPointOfInterests();
+	}
+
+	public PointOfInterestDistance getClosestPointOfInterest(String principal,
+			BigDecimal userLat,
+			BigDecimal userLng) {
+		return getPointsOfInterest(principal).stream().filter(p -> p.isActive())
+				.map(p -> new PointOfInterestDistance(p.getId(),
+						calculateDistance(userLat.doubleValue(),
+								userLng.doubleValue(),
+								p.getLat().doubleValue(),
+								p.getLng().doubleValue())))
+				.min(Comparator.naturalOrder()).get();
+	}
+
+	private double calculateDistance(double x1, double x2, double y1, double y2) {
+		return Math.abs(Math.hypot(x1 - x2, y1 - y2));
 	}
 
 	private ApplicationUser getUser(String principal) {

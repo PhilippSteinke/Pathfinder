@@ -17,18 +17,18 @@ import com.OutOfBounds.Pathfinder.model.PointOfInterest;
 import com.OutOfBounds.Pathfinder.service.PointOfInterestService;
 
 @RestController
-@RequestMapping("/pointofinterest")
+@RequestMapping("/pointsofinterest")
 public class PointsOfInterestController {
 
 	@Autowired
 	private PointOfInterestService service;
 
-	@GetMapping(value = "/all")
+	@GetMapping("/all")
 	public List<PointOfInterest> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping(value = "/add")
+	@PostMapping("/add")
 	public void addAll(@RequestParam String password,
 			@RequestBody List<PointOfInterest> pointsOfInterest) throws AccessDeniedException {
 		if (password.equals(POINT_OF_INTEREST_PASSWORD)) {

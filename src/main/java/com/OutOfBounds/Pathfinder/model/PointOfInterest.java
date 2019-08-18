@@ -1,5 +1,7 @@
 package com.OutOfBounds.Pathfinder.model;
 
+import java.math.BigDecimal;
+
 import org.springframework.data.annotation.Id;
 
 public class PointOfInterest {
@@ -7,21 +9,21 @@ public class PointOfInterest {
 	@Id
 	private String id;
 
-	private final float lat, lng;
+	private final BigDecimal lat, lng;
 
 	private boolean isActive;
 
-	public PointOfInterest(float lat, float lng) {
+	public PointOfInterest(BigDecimal lat, BigDecimal lng) {
 		this.lat = lat;
 		this.lng = lng;
 		isActive = true;
 	}
 
-	public float getLat() {
+	public BigDecimal getLat() {
 		return lat;
 	}
 
-	public float getLng() {
+	public BigDecimal getLng() {
 		return lng;
 	}
 
