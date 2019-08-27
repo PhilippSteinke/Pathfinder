@@ -5,7 +5,7 @@ services:
     container_name: "mongodb"
     command: --smallfiles
   app:
-    image: mirkobrandt/Pathfinder
+    image: mirkobrandt/pathfinder
     ports:
     - 8080:8080
     links:
