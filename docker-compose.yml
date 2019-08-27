@@ -1,7 +1,7 @@
 version: "2"
 services:
   mongodb:
-    image: mongo:3.2.4
+    image: mongo:4.0.10
     container_name: "mongodb"
     command: --smallfiles
   app:
