@@ -6,7 +6,7 @@ public class Highscore implements Comparable<Highscore> {
 
 	private String username;
 
-	private Integer score;
+	private int score;
 
 	public Highscore() {
 	}
@@ -24,17 +24,12 @@ public class Highscore implements Comparable<Highscore> {
 		this.username = username;
 	}
 
-	public Integer getScore() {
+	public int getScore() {
 		return score;
 	}
 
-	public void setScore(Integer score) {
+	public void setScore(int score) {
 		this.score = score;
-	}
-
-	@Override
-	public int compareTo(Highscore o) {
-		return score.compareTo(o.getScore());
 	}
 
 	public int getPosition() {
@@ -43,5 +38,10 @@ public class Highscore implements Comparable<Highscore> {
 
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	@Override
+	public int compareTo(Highscore o) {
+		return Integer.valueOf(score).compareTo(o.getScore());
 	}
 }
