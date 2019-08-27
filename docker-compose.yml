@@ -4,6 +4,8 @@ services:
     image: mongo:4.0.10
     container_name: "mongodb"
     command: --smallfiles
+    ports:
+    - 27017:27017
   app:
     image: mirkobrandt/pathfinder
     ports:
