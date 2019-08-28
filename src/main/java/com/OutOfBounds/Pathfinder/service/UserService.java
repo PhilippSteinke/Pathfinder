@@ -53,6 +53,7 @@ public class UserService {
 		user.setPassword(encoder.encode(user.getPassword()));
 		user.setPointOfInterests(pointOfInterestService.getAll());
 		userRepo.save(user);
+		updateHighscore();
 	}
 
 	public List<PointOfInterest> completePointOfInterest(String principal, Achievement achievement)
