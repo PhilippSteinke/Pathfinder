@@ -19,12 +19,16 @@ public class PathfinderApplication {
 		return new BCryptPasswordEncoder();
 	}
 
+	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
+
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://pathfinder.mt.haw-hamburg.de");
+				registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowedOrigins("*").allowedHeaders("*");
 			}
 		};
 	}
+
 }
