@@ -3,9 +3,11 @@ services:
   db:
     image: mongo
     container_name: mongoserver
+    restart: always
   app:
     image: mirkobrandt/pathfinder
     build: .
+    restart: always
     ports:
     - 8080:8080
     depends_on:
