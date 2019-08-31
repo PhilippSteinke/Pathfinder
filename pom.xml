@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.OutOfBounds</groupId>
 	<artifactId>Pathfinder</artifactId>
-	<version>0.5-BETA</version>
+	<version>0.6-BETA</version>
 	<name>Pathfinder</name>
 	<description>Demo project for Spring Boot</description>
 	<packaging>jar</packaging>
