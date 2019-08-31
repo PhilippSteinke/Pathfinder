@@ -90,6 +90,10 @@ public class UserService {
 				.min(Comparator.naturalOrder()).get();
 	}
 
+	public void deleteAllUsers() {
+		userRepo.deleteAll();
+	}
+
 	private double calculateDistance(double x1, double x2, double y1, double y2) {
 		return Math.abs(Math.hypot(x1 - x2, y1 - y2));
 	}

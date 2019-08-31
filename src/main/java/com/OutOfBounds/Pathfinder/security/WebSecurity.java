@@ -1,8 +1,11 @@
 package com.OutOfBounds.Pathfinder.security;
 
+import static com.OutOfBounds.Pathfinder.security.SecurityConstants.POINT_OF_INTEREST_ADD_TESTING_URL;
 import static com.OutOfBounds.Pathfinder.security.SecurityConstants.POINT_OF_INTEREST_ADD_URL;
 import static com.OutOfBounds.Pathfinder.security.SecurityConstants.POINT_OF_INTEREST_ALL_URL;
+import static com.OutOfBounds.Pathfinder.security.SecurityConstants.POINT_OF_INTEREST_DELETE_TESTING_URL;
 import static com.OutOfBounds.Pathfinder.security.SecurityConstants.SIGN_UP_URL;
+import static com.OutOfBounds.Pathfinder.security.SecurityConstants.USER_DELETE_TESTING;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,8 +42,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		http.cors().configurationSource(corsConfigurationSource()).and().csrf().disable()
 				.authorizeRequests().antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
 				.antMatchers(POINT_OF_INTEREST_ALL_URL).permitAll()
-				.antMatchers(POINT_OF_INTEREST_ADD_URL).permitAll().anyRequest().authenticated()
-				.and().addFilter(new JWTAuthenticationFilter(authenticationManager()))
+				.antMatchers(POINT_OF_INTEREST_ADD_URL).permitAll()
+				.antMatchers(POINT_OF_INTEREST_DELETE_TESTING_URL).permitAll()
+				.antMatchers(POINT_OF_INTEREST_ADD_TESTING_URL).permitAll()
+				.antMatchers(USER_DELETE_TESTING).permitAll().anyRequest().authenticated().and()
+				.addFilter(new JWTAuthenticationFilter(authenticationManager()))
 				.addFilter(new JWTAuthorizationFilter(authenticationManager())).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,5 +37,15 @@ public class PointsOfInterestController {
 		} else {
 			throw new AccessDeniedException("YOU SHALL NOT PASS!");
 		}
+	}
+
+	@PostMapping("/add-testing")
+	public void addTesting() {
+		service.addTestingPointOfInterests();
+	}
+
+	@DeleteMapping("/delete-all")
+	public void deleteAll() {
+		service.deleteAll();
 	}
 }

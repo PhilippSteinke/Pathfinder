@@ -35,7 +35,11 @@ public class PointOfInterestService {
 		repo.saveAll(pointsOfInterest);
 	}
 
-	private void addTestingPointOfInterests() {
+	public void deleteAll() {
+		repo.deleteAll();
+	}
+
+	public void addTestingPointOfInterests() {
 		if (getAll().size() == 0) {
 			addAll(Arrays.asList(
 					new PointOfInterest(BigDecimal.valueOf(53.566088),
