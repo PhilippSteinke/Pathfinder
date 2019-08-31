@@ -19,7 +19,7 @@ services:
     image: mirkobrandt/pathfinder
     build: .
     restart: always
-    ports:
+    expose:
     - "8080"
     depends_on:
     - db
