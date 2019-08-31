@@ -10,6 +10,16 @@ services:
     ports:
       - 80:80
       - 443:443
+  frontend:
+    image: nginx
+    container_name: nginx_frontend
+    restart: always
+    volumes:
+      - ./nginx-frontend.conf:/etc/nginx/nginx.conf
+      - /home/torage/cert/:/home/torage/cert/
+      - /home/torage/Pathfinder/dist/:/var/www/html/
+    ports:
+      - 9090:9090
   db:
     image: mongo
     container_name: mongoserver
