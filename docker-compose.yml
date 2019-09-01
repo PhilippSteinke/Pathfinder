@@ -2,10 +2,11 @@ version: "2"
 services:
   nginx:
     image: nginx
-    container_name: nginx_reverse_proxy
+    container_name: nginx_webserver
     restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/error.log:/etc/nginx/error_log.log
       - /home/torage/cert/:/home/torage/cert/
       - /home/torage/Pathfinder/dist/:/var/www/html/
     ports:
