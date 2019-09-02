@@ -77,6 +77,15 @@ public class ApplicationUser {
 			throw new EntityNotFoundException(
 					String.format("PointOfInterest with Id %s couldn't be found!", id));
 		}
+	}
 
+	@JsonIgnore
+	public boolean isPointOfInterestActive(String id) throws EntityNotFoundException {
+		try {
+			return pointOfInterests.get(id).isActive();
+		} catch (NullPointerException ex) {
+			throw new EntityNotFoundException(
+					String.format("PointOfInterest with Id %s couldn't be found!", id));
+		}
 	}
 }

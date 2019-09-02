@@ -11,6 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.OutOfBounds.Pathfinder.exception.EntityNotFoundException;
+import com.OutOfBounds.Pathfinder.exception.PointOfInterestInactiveException;
 import com.OutOfBounds.Pathfinder.exception.UsernameNotUniqueException;
 
 @ControllerAdvice
@@ -41,6 +42,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 				ex.getMessage(),
 				new HttpHeaders(),
 				HttpStatus.FORBIDDEN,
+				request);
+	}
+
+	@ExceptionHandler(PointOfInterestInactiveException.class)
+	protected ResponseEntity<Object> handlePointOfInterestInactiveException(Exception ex,
+			WebRequest request) {
+		return handleExceptionInternal(ex,
+				ex.getMessage(),
+				new HttpHeaders(),
+				HttpStatus.METHOD_NOT_ALLOWED,
 				request);
 	}
 }

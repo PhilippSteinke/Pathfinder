@@ -1,9 +1,12 @@
 package com.OutOfBounds.Pathfinder.controller;
 
+import static com.OutOfBounds.Pathfinder.security.SecurityConstants.ADMIN_PASSWORD;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.OutOfBounds.Pathfinder.exception.EntityNotFoundException;
+import com.OutOfBounds.Pathfinder.exception.PointOfInterestInactiveException;
 import com.OutOfBounds.Pathfinder.exception.UsernameNotUniqueException;
 import com.OutOfBounds.Pathfinder.model.Achievement;
 import com.OutOfBounds.Pathfinder.model.ApplicationUser;
@@ -41,7 +45,8 @@ public class UserController {
 	@PostMapping("/pointsofinterest/{id}/complete/{value}")
 	public List<PointOfInterest> completePointOfInterest(@AuthenticationPrincipal String principal,
 			@PathVariable String id,
-			@PathVariable int value) throws EntityNotFoundException {
+			@PathVariable int value)
+			throws EntityNotFoundException, PointOfInterestInactiveException {
 		return userService.completePointOfInterest(principal, new Achievement(id, value));
 	}
 
@@ -69,7 +74,11 @@ public class UserController {
 	}
 
 	@DeleteMapping("/delete-all")
-	public void deleteAll() {
-		userService.deleteAllUsers();
+	public void deleteAll(@RequestParam String password) throws AccessDeniedException {
+		if (password.equals(ADMIN_PASSWORD)) {
+			userService.deleteAllUsers();
+		} else {
+			throw new AccessDeniedException("YOU SHALL NOT PASS!");
+		}
 	}
 }

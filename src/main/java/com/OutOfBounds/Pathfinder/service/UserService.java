@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.OutOfBounds.Pathfinder.exception.EntityNotFoundException;
+import com.OutOfBounds.Pathfinder.exception.PointOfInterestInactiveException;
 import com.OutOfBounds.Pathfinder.exception.UsernameNotUniqueException;
 import com.OutOfBounds.Pathfinder.model.Achievement;
 import com.OutOfBounds.Pathfinder.model.ApplicationUser;
@@ -57,13 +58,19 @@ public class UserService {
 	}
 
 	public List<PointOfInterest> completePointOfInterest(String principal, Achievement achievement)
-			throws EntityNotFoundException {
+			throws EntityNotFoundException, PointOfInterestInactiveException {
 		ApplicationUser user = getUser(principal);
-		user.addAchievement(achievement);
-		user.setPointOfInterestInactive(achievement.getPointOfInterestId());
-		userRepo.save(user);
-		updateHighscore();
-		return user.getPointOfInterests();
+		String pointOfInterestId = achievement.getPointOfInterestId();
+
+		if (user.isPointOfInterestActive(pointOfInterestId)) {
+			user.addAchievement(achievement);
+			user.setPointOfInterestInactive(pointOfInterestId);
+			userRepo.save(user);
+			updateHighscore();
+			return user.getPointOfInterests();
+		} else {
+			throw new PointOfInterestInactiveException(pointOfInterestId);
+		}
 	}
 
 	public List<Achievement> getAchievements(String principal) {

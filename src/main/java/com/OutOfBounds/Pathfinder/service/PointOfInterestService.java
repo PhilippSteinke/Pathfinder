@@ -1,10 +1,6 @@
 package com.OutOfBounds.Pathfinder.service;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +16,6 @@ public class PointOfInterestService {
 	@Autowired
 	private PointOfInterestRepository repo;
 
-	@PostConstruct
-	public void testInit() {
-		addTestingPointOfInterests();
-	}
-
 	public List<PointOfInterest> getAll() {
 		return repo.findAll();
 	}
@@ -37,15 +28,5 @@ public class PointOfInterestService {
 
 	public void deleteAll() {
 		repo.deleteAll();
-	}
-
-	public void addTestingPointOfInterests() {
-		if (getAll().size() == 0) {
-			addAll(Arrays.asList(
-					new PointOfInterest(BigDecimal.valueOf(53.566088),
-							BigDecimal.valueOf(10.041571)),
-					new PointOfInterest(BigDecimal.valueOf(53.553648),
-							BigDecimal.valueOf(10.027158))));
-		}
 	}
 }

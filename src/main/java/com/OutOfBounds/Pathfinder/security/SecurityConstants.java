@@ -11,5 +11,5 @@ public class SecurityConstants {
 	public static final String POINT_OF_INTEREST_ADD_URL = "/pointsofinterest/add";
 	public static final String POINT_OF_INTEREST_DELETE_TESTING_URL = "/pointsofinterest/delete-all";
 	public static final String POINT_OF_INTEREST_ADD_TESTING_URL = "/pointsofinterest/add-testing";
-	public static final String POINT_OF_INTEREST_PASSWORD = "brilliant";
+	public static final String ADMIN_PASSWORD = "brilliant";
 }

@@ -1,6 +1,6 @@
 package com.OutOfBounds.Pathfinder.controller;
 
-import static com.OutOfBounds.Pathfinder.security.SecurityConstants.POINT_OF_INTEREST_PASSWORD;
+import static com.OutOfBounds.Pathfinder.security.SecurityConstants.ADMIN_PASSWORD;
 
 import java.util.List;
 
@@ -32,20 +32,19 @@ public class PointsOfInterestController {
 	@PostMapping("/add")
 	public void addAll(@RequestParam String password,
 			@RequestBody List<PointOfInterest> pointsOfInterest) throws AccessDeniedException {
-		if (password.equals(POINT_OF_INTEREST_PASSWORD)) {
+		if (password.equals(ADMIN_PASSWORD)) {
 			service.addAll(pointsOfInterest);
 		} else {
 			throw new AccessDeniedException("YOU SHALL NOT PASS!");
 		}
 	}
 
-	@PostMapping("/add-testing")
-	public void addTesting() {
-		service.addTestingPointOfInterests();
-	}
-
 	@DeleteMapping("/delete-all")
-	public void deleteAll() {
-		service.deleteAll();
+	public void deleteAll(@RequestParam String password) throws AccessDeniedException {
+		if (password.equals(ADMIN_PASSWORD)) {
+			service.deleteAll();
+		} else {
+			throw new AccessDeniedException("YOU SHALL NOT PASS!");
+		}
 	}
 }
