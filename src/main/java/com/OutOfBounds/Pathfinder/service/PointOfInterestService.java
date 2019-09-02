@@ -29,4 +29,8 @@ public class PointOfInterestService {
 	public void deleteAll() {
 		repo.deleteAll();
 	}
+
+	public void deleteById(String id) {
+		repo.deleteById(id);
+	}
 }

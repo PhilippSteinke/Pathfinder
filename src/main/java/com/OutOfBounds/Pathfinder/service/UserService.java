@@ -40,8 +40,6 @@ public class UserService {
 	@PostConstruct
 	public void init() {
 		updateHighscore();
-		// for testing only
-		testing();
 	}
 
 	public void signUpNewUser(ApplicationUser user) throws UsernameNotUniqueException {
@@ -101,6 +99,10 @@ public class UserService {
 		userRepo.deleteAll();
 	}
 
+	public void deleteByUsername(String username) {
+		userRepo.deleteById(getUser(username).getId());
+	}
+
 	private double calculateDistance(double x1, double x2, double y1, double y2) {
 		return Math.abs(Math.hypot(x1 - x2, y1 - y2));
 	}
@@ -114,9 +116,5 @@ public class UserService {
 
 	private void updateHighscore() {
 		highscoreService.updateBuffer(userRepo.findAll());
-	}
-
-	private void testing() {
-		userRepo.findAll().forEach(u -> u.setPointOfInterests(pointOfInterestService.getAll()));
 	}
 }

@@ -1,7 +1,5 @@
 package com.OutOfBounds.Pathfinder.controller;
 
-import static com.OutOfBounds.Pathfinder.security.SecurityConstants.ADMIN_PASSWORD;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -25,6 +23,7 @@ import com.OutOfBounds.Pathfinder.model.ApplicationUser;
 import com.OutOfBounds.Pathfinder.model.Highscore;
 import com.OutOfBounds.Pathfinder.model.PointOfInterest;
 import com.OutOfBounds.Pathfinder.model.PointOfInterestDistance;
+import com.OutOfBounds.Pathfinder.service.AdminPasswordValidationService;
 import com.OutOfBounds.Pathfinder.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +64,7 @@ public class UserController {
 		return userService.getPointsOfInterest(principal);
 	}
 
-	@GetMapping("/closest-pointofinterest")
+	@GetMapping("/pointsofinterest/closest")
 	public PointOfInterestDistance getClosestPointOfInterest(
 			@AuthenticationPrincipal String principal,
 			@RequestParam BigDecimal lat,
@@ -73,12 +72,16 @@ public class UserController {
 		return userService.getClosestPointOfInterest(principal, lat, lng);
 	}
 
-	@DeleteMapping("/delete-all")
+	@DeleteMapping("/delete/all")
 	public void deleteAll(@RequestParam String password) throws AccessDeniedException {
-		if (password.equals(ADMIN_PASSWORD)) {
-			userService.deleteAllUsers();
-		} else {
-			throw new AccessDeniedException("YOU SHALL NOT PASS!");
-		}
+		AdminPasswordValidationService.validatePassword(password);
+		userService.deleteAllUsers();
+	}
+
+	@DeleteMapping("/delete/{username}")
+	public void deleteByUsername(@PathVariable String username, @RequestParam String password)
+			throws AccessDeniedException {
+		AdminPasswordValidationService.validatePassword(password);
+		userService.deleteByUsername(username);
 	}
 }
