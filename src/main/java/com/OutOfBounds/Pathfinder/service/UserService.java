@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -97,10 +97,16 @@ public class UserService {
 
 	public void deleteAllUsers() {
 		userRepo.deleteAll();
+		updateHighscore();
 	}
 
 	public void deleteByUsername(String username) {
 		userRepo.deleteById(getUser(username).getId());
+		updateHighscore();
+	}
+
+	public boolean isUserAuthenticationValid(String username) {
+		return userRepo.findByUsername(username).isPresent();
 	}
 
 	private double calculateDistance(double x1, double x2, double y1, double y2) {
@@ -109,8 +115,7 @@ public class UserService {
 
 	private ApplicationUser getUser(String principal) {
 		ApplicationUser user = userRepo.findByUsername(principal)
-				.orElseThrow(() -> new UsernameNotFoundException(
-						String.format("User %s couldn't be found!", principal)));
+				.orElseThrow(() -> new AccessDeniedException("Token not valid!"));
 		return user;
 	}
 

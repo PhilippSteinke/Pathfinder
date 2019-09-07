@@ -41,6 +41,11 @@ public class UserController {
 		userService.signUpNewUser(user);
 	}
 
+	@GetMapping("/validate")
+	public boolean validate(@AuthenticationPrincipal String principal) {
+		return userService.isUserAuthenticationValid(principal);
+	}
+
 	@PostMapping("/pointsofinterest/{id}/complete/{value}")
 	public List<PointOfInterest> completePointOfInterest(@AuthenticationPrincipal String principal,
 			@PathVariable String id,
